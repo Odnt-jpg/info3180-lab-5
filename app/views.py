@@ -77,7 +77,9 @@ def movies():
         description = form.description.data
         poster = form.poster.data
 
-        filename = secure_filename(poster.filename)
+        filename = secure_filename(title)
+        extension = os.path.splitext(poster.filename)[1]
+        filename = f"{filename}{extension}"
         poster.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
         movie = Movie(title=title, description=description, poster=filename)
@@ -115,13 +117,7 @@ def get_movies():
     ]
     return jsonify({"movies": movies_list})
 
-@app.route('/api/v1/posters/<filename>', methods=['GET'])
+@app.route('/api/v1/posters/<filename>')
 def get_poster(filename):
-    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    print("Looking for file at:", file_path) 
-
-    if not os.path.exists(file_path):
-        print(f"File not found: {file_path}") 
-        abort(404)  
-
-    return send_file(file_path)
+    print (os.path.join(os.getcwd(), app.config['UPLOAD_FOLDER']), filename) 
+    return send_from_directory(os.path.join(os.getcwd(), app.config['UPLOAD_FOLDER']), filename)

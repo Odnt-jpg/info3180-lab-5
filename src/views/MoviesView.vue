@@ -34,7 +34,7 @@ onMounted(() => {
 
 <style scoped>
 .movies-view {
-  max-width: 800px;
+  max-width:1000px;
   margin: 0 auto;
   padding: 20px;
 }
@@ -42,7 +42,7 @@ onMounted(() => {
 .movies-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 30px;
 }
 
 .movie-card {
@@ -56,7 +56,7 @@ onMounted(() => {
 
 .movie-poster {
   max-width: 100%;
-  height: auto;
+  height: 19em;
   border-radius: 8px;
 }
 </style>

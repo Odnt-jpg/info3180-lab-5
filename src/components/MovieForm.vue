@@ -56,7 +56,7 @@ const movie = ref({
   poster: null,
 });
 
-const csrf_token = ref(''); // Declare csrf_token here
+const csrf_token = ref('');
 const message = ref('');
 const errors = ref([]);
 
@@ -91,7 +91,7 @@ const saveMovie = () => {
     method: 'POST',
     body: formData,
     headers: {
-      'X-CSRFToken': csrf_token.value, // Use csrf_token here
+      'X-CSRFToken': csrf_token.value, 
     },
   })
     .then((response) => response.json())
