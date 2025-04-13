@@ -6,12 +6,14 @@ This file creates your application.
 """
 
 from app import app
-from flask import render_template, request, jsonify, send_file
+from flask import render_template, request, jsonify,  send_from_directory, send_file, abort
 import os
 from app import db
 from app.models import Movie
 from app.forms import MovieForm
 from werkzeug.utils import secure_filename
+from flask_wtf.csrf import generate_csrf
+
 
 ###
 # Routing for your application.
@@ -92,3 +94,34 @@ def movies():
         return jsonify({
             "errors": form_errors(form)
         }), 400
+    
+
+@app.route('/api/v1/csrf-token', methods=['GET'])
+def get_csrf():
+        return jsonify({'csrf_token': generate_csrf()})
+
+
+@app.route('/api/v1/movies', methods=['GET'])
+def get_movies():
+    movies = Movie.query.all()
+    movies_list = [
+        {
+            "id": movie.id,
+            "title": movie.title,
+            "description": movie.description,
+            "poster": f"/api/v1/posters/{movie.poster}"
+        }
+        for movie in movies
+    ]
+    return jsonify({"movies": movies_list})
+
+@app.route('/api/v1/posters/<filename>', methods=['GET'])
+def get_poster(filename):
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    print("Looking for file at:", file_path) 
+
+    if not os.path.exists(file_path):
+        print(f"File not found: {file_path}") 
+        abort(404)  
+
+    return send_file(file_path)
